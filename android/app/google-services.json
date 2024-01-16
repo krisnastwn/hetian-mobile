@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "551813162738",
+    "project_id": "hetian-mobile-4487f",
+    "storage_bucket": "hetian-mobile-4487f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:551813162738:android:65bb7838d30eca9df4d26b",
+        "android_client_info": {
+          "package_name": "com.ratnasari.hetian_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApJBaJj3nuvbfgQJk2pKs9tI8fo-mP2pk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
