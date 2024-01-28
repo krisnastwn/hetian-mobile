@@ -119,7 +119,7 @@ class EmployeeView extends GetView<EmployeeController> {
                                   ),
                                 ),
                                 Text(
-                                  employee.job!,
+                                  employee.role!,
                                   style: const TextStyle(fontSize: 12),
                                 ),
                               ],

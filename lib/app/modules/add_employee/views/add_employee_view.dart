@@ -61,7 +61,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
           CustomInput(
             controller: controller.nameC,
             label: 'Nama Lengkap',
-            hint: 'Rika Ratnasari',
+            hint: 'Joko Susilo',
             textInputAction: TextInputAction.next,
             focusNode: controller.nameFocusNode,
             onSubmitted: (value) {
@@ -72,7 +72,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
           CustomInput(
             controller: controller.emailC,
             label: 'Email',
-            hint: 'ratnasari@gmail.com',
+            hint: 'jokosusilo@hetian.com',
             textInputAction: TextInputAction.next,
             focusNode: controller.emailFocusNode,
           ),
@@ -85,7 +85,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
               border: Border.all(width: 1, color: AppColor.secondaryExtraSoft),
             ),
             child: DropdownButtonFormField(
-              value: controller.selectedJob.value,
+              value: controller.selectedRole.value,
               decoration: InputDecoration(
                 labelText: 'Jabatan',
                 labelStyle: TextStyle(
@@ -95,14 +95,14 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
                 focusedBorder: InputBorder.none,
                 border: InputBorder.none,
               ),
-              items: controller.jobs.map((String job) {
+              items: controller.roles.map((String role) {
                 return DropdownMenuItem(
-                  value: job,
-                  child: Text(job),
+                  value: role,
+                  child: Text(role),
                 );
               }).toList(),
               onChanged: (String? newValue) {
-                controller.selectedJob.value = newValue!;
+                controller.selectedRole.value = newValue!;
               },
             ),
           ),

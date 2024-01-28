@@ -75,11 +75,9 @@ class UpdatePofileController extends GetxController {
         "avatar": FieldValue.delete(),
       });
       Get.back();
-
-      Get.snackbar("Berhasil", "Berhasil menghapus avatar profil");
+      CustomToast.successToast('Sukses', 'Berhasil menghapus avatar profil');
     } catch (e) {
-      Get.snackbar("Terjadi Kesalahan",
-          "Tidak dapat menghapus avatar profil. Karena ${e.toString()}");
+      CustomToast.errorToast('Gagal', 'Gagal menghapus avatar profil');
     } finally {
       update();
     }

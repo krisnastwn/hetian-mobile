@@ -1,8 +1,8 @@
 class Employee {
   final String? id;
   final String? name;
-  final String? job;
+  final String? role;
   final int? totalLeave;
 
-  Employee({this.id, this.name, this.job, this.totalLeave});
+  Employee({this.id, this.name, this.role, this.totalLeave});
 }

@@ -3,16 +3,22 @@ import 'package:hetian_mobile/app/model/employee.dart';
 import 'package:hetian_mobile/app/model/leave.dart';
 
 class FirestoreService {
-
   static Future<Employee> fetchEmployeeById(String employeeId) async {
-    DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance.collection('employee').doc(employeeId).get();
+    DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
+        .collection('employee')
+        .doc(employeeId)
+        .get();
 
     if (employeeSnapshot.exists) {
       return Employee(
         id: employeeSnapshot.id,
-        name: (employeeSnapshot.data() as Map<String, dynamic>)['name'] as String? ?? '',
-        job: (employeeSnapshot.data() as Map<String, dynamic>)['job'] as String,
-        totalLeave: (employeeSnapshot.data() as Map<String, dynamic>)['total_leave'] as int,
+        name: (employeeSnapshot.data() as Map<String, dynamic>)['name']
+                as String? ??
+            '',
+        role:
+            (employeeSnapshot.data() as Map<String, dynamic>)['role'] as String,
+        totalLeave: (employeeSnapshot.data()
+            as Map<String, dynamic>)['total_leave'] as int,
       );
     } else {
       throw Exception('Employee not found');
@@ -20,13 +26,14 @@ class FirestoreService {
   }
 
   static Future<List<Employee>> fetchEmployees() async {
-    QuerySnapshot employeeSnapshot = await FirebaseFirestore.instance.collection('employee').get();
+    QuerySnapshot employeeSnapshot =
+        await FirebaseFirestore.instance.collection('employee').get();
 
     List<Employee> employees = employeeSnapshot.docs.map((doc) {
       return Employee(
         id: doc.id,
         name: (doc.data() as Map<String, dynamic>)['name'] as String? ?? '',
-        job: (doc.data() as Map<String, dynamic>)['job'] as String,
+        role: (doc.data() as Map<String, dynamic>)['role'] as String,
         totalLeave: (doc.data() as Map<String, dynamic>)['total_leave'] as int,
       );
     }).toList();
@@ -45,11 +52,18 @@ class FirestoreService {
       return Leave(
         id: doc.id,
         employeeId: employeeId,
-        requestDate: (doc.data() as Map<String, dynamic>)['date_request'] as String,
-        startDate: (doc.data() as Map<String, dynamic>)['start_date'] as String,
-        endDate: (doc.data() as Map<String, dynamic>)['end_date'] as String,
+        requestDate: (doc.data() as Map<String, dynamic>)['date_request']
+            .toDate()
+            .toString(),
+        startDate: (doc.data() as Map<String, dynamic>)['start_date']
+            .toDate()
+            .toString(),
+        endDate: (doc.data() as Map<String, dynamic>)['end_date']
+            .toDate()
+            .toString(),
         reason: (doc.data() as Map<String, dynamic>)['reason'] as String,
-        status: (doc.data() as Map<String, dynamic>)['status'] as String,
+        managerApproval: (doc.data() as Map<String, dynamic>)['manager_approval'] as String,
+        hrdApproval: (doc.data() as Map<String, dynamic>)['hrd_approval'] as String,
       );
     }).toList();
 

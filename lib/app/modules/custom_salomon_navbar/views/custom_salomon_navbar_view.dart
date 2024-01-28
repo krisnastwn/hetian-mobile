@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hetian_mobile/app/modules/annual_leave/views/annual_leave_view.dart';
 import 'package:hetian_mobile/app/modules/home/views/home_view.dart';
@@ -39,12 +38,6 @@ class CustomSalomonNavbarView extends GetView<CustomSalomonNavbarController> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<CustomSalomonNavbarController>();
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: lightColorScheme.background,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
     return Scaffold(
       body: Obx(() => pages[controller.currentIndex.value]),
       bottomNavigationBar: Obx(

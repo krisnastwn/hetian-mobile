@@ -5,7 +5,8 @@ class Leave {
   final String startDate;
   final String endDate;
   final String reason;
-  final String status;
+  final String managerApproval;
+  final String hrdApproval;
 
   Leave({
     required this.id,
@@ -14,6 +15,7 @@ class Leave {
     required this.startDate,
     required this.endDate,
     required this.reason,
-    required this.status,
+    required this.managerApproval,
+    required this.hrdApproval,
   });
 }

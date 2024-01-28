@@ -121,8 +121,8 @@ class NewPasswordView extends GetView<NewPasswordController> {
                       },
                       suffixIcon: IconButton(
                         icon: (controller.newPassObs.value != false)
-                            ? SvgPicture.asset('assets/icons/show.svg')
-                            : SvgPicture.asset('assets/icons/hide.svg'),
+                            ? SvgPicture.asset('assets/icons/hide.svg')
+                            : SvgPicture.asset('assets/icons/show.svg'),
                         onPressed: () {
                           controller.newPassObs.value =
                               !(controller.newPassObs.value);
@@ -141,8 +141,8 @@ class NewPasswordView extends GetView<NewPasswordController> {
                       focusNode: controller.confirmPassFocusNode,
                       suffixIcon: IconButton(
                         icon: (controller.newPassCObs.value != false)
-                            ? SvgPicture.asset('assets/icons/show.svg')
-                            : SvgPicture.asset('assets/icons/hide.svg'),
+                            ? SvgPicture.asset('assets/icons/hide.svg')
+                            : SvgPicture.asset('assets/icons/show.svg'),
                         onPressed: () {
                           controller.newPassCObs.value =
                               !(controller.newPassCObs.value);

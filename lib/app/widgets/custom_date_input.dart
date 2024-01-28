@@ -8,7 +8,7 @@ class CustomDateInput extends StatefulWidget {
   final bool disabled;
   final EdgeInsetsGeometry margin;
   final Widget? suffixIcon;
-  final Function? onTap;
+  final VoidCallback onTap;
   final double width;
 
   const CustomDateInput({
@@ -59,15 +59,13 @@ class _CustomDateInputState extends State<CustomDateInput> {
         ),
         child: GestureDetector(
           onTap: () {
-            if (widget.onTap != null) {
-              widget.onTap!();
-            }
+            widget.onTap();
             _focusNode.requestFocus();
           },
           child: AbsorbPointer(
             absorbing: widget.disabled,
             child: TextField(
-              onTap: () => widget.onTap!(),
+              onTap: () => widget.onTap(),
               readOnly: true,
               style: const TextStyle(fontSize: 14, fontFamily: 'poppins'),
               maxLines: 1,

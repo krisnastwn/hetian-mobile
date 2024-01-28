@@ -31,7 +31,7 @@ class AnnualLeaveView extends GetView<AnnualLeaveController> {
             case ConnectionState.done:
               Map<String, dynamic> user = snapshot.data!.data()!;
               controller.nameC.text = user['name'];
-              controller.jobC.text = user['job'];
+              controller.roleC.text = user['role'];
 
               final DateTime pickedDateRequest = DateTime.now();
               controller.dateRequestC.text =
@@ -51,14 +51,14 @@ class AnnualLeaveView extends GetView<AnnualLeaveController> {
                         textInputAction: TextInputAction.next,
                       ),
                       CustomInput(
-                        controller: controller.jobC,
+                        controller: controller.roleC,
                         label: 'Jabatan',
                         hint: 'Manager IT',
                         disabled: true,
                         textInputAction: TextInputAction.next,
                       ),
                       CustomDateInput(
-                        onTap: null,
+                        onTap: () {},
                         controller: controller.dateRequestC,
                         disabled: true,
                         width: MediaQuery.of(context).size.width,

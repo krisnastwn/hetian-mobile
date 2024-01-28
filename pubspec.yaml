@@ -6,7 +6,6 @@ environment:
   sdk: '>=3.1.2 <4.0.0'
 
 dependencies: 
-  awesome_notifications:
   cached_network_image:
   cloud_firestore: ^4.14.0
   cloud_functions: ^4.6.0

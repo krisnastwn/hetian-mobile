@@ -89,7 +89,7 @@ class ProfileView extends GetView<ProfileController> {
                                   ),
                                 ),
                                 Text(
-                                  userData["job"],
+                                  userData["role"],
                                   style: const TextStyle(color: Colors.white70),
                                 ),
                               ],
@@ -135,7 +135,7 @@ class ProfileView extends GetView<ProfileController> {
                                   onTap: () =>
                                       Get.toNamed(Routes.CHANGE_PASSWORD),
                                 ),
-                                (userData["job"] == "HRD")
+                                (userData["role"] == "HRD")
                                     ? MenuTile(
                                         title: 'Tambah Pegawai',
                                         icon: ColorFiltered(
@@ -151,7 +151,7 @@ class ProfileView extends GetView<ProfileController> {
                                             Get.toNamed(Routes.ADD_EMPLOYEE),
                                       )
                                     : const SizedBox(),
-                                (userData["job"] == "HRD")
+                                (userData["role"] == "HRD")
                                     ? MenuTile(
                                         title: 'Riwayat Cuti Pegawai',
                                         icon: Center(
@@ -168,7 +168,8 @@ class ProfileView extends GetView<ProfileController> {
                                         },
                                       )
                                     : const SizedBox(),
-                                (userData["job"] == "HRD")
+                                (userData["role"] == "HRD" ||
+                                        userData["role"] == "Manager")
                                     ? MenuTile(
                                         title: 'Daftar Pengajuan Cuti',
                                         icon: Center(
@@ -181,6 +182,7 @@ class ProfileView extends GetView<ProfileController> {
                                         onTap: () {
                                           Get.toNamed(
                                             Routes.LIST_REQUEST_LEAVE,
+                                            arguments: controller.streamUser(),
                                           );
                                         },
                                       )

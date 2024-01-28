@@ -15,7 +15,7 @@ class CustomAlertDialog {
       backgroundColor: lightColorScheme.background,
       title: "",
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-      radius: 8,
+      radius: 16,
       titlePadding: EdgeInsets.zero,
       titleStyle: const TextStyle(fontSize: 0),
       content: Column(
@@ -92,7 +92,7 @@ class CustomAlertDialog {
     );
   }
 
-  static showPresenceAlert({
+  static showLeaveAlert({
     required String title,
     required String message,
     required void Function() onConfirm,

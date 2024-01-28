@@ -8,14 +8,12 @@ class FcmController extends GetxController {
   void onInit() {
     super.onInit();
     messaging.getToken().then((value) {
-      print("Firebase Messaging Token: $value");
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
-        print('A new message arrived: ${notification.body}');
       }
     });
   }

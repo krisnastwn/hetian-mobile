@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hetian_mobile/app/style/app_color.dart';
+import 'package:hetian_mobile/app/widgets/toast/custom_toast.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AnnualLeaveController extends GetxController {
   TextEditingController nameC = TextEditingController();
   TextEditingController reasonC = TextEditingController();
-  TextEditingController jobC = TextEditingController();
+  TextEditingController roleC = TextEditingController();
   TextEditingController dateRequestC = TextEditingController();
   TextEditingController startDateC = TextEditingController();
   TextEditingController endDateC = TextEditingController();
@@ -22,7 +22,7 @@ class AnnualLeaveController extends GetxController {
   void onClose() {
     nameC.dispose();
     reasonC.dispose();
-    jobC.dispose();
+    roleC.dispose();
     dateRequestC.dispose();
     startDateC.dispose();
     endDateC.dispose();
@@ -31,11 +31,13 @@ class AnnualLeaveController extends GetxController {
 
   void selectStartDate() async {
     final DateTime? pickedDate = await showDatePicker(
-      context: Get.context!,
-      initialDate: DateTime.now().add(const Duration(days: 1)),
-      firstDate: DateTime.now().add(const Duration(days: 1)),
-      lastDate: DateTime(2100),
-    );
+        context: Get.context!,
+        initialDate: DateTime.now().add(const Duration(days: 1)),
+        firstDate: DateTime.now().add(const Duration(days: 1)),
+        lastDate: DateTime(2100),
+        selectableDayPredicate: (date) {
+          return date.weekday != DateTime.sunday;
+        });
 
     if (pickedDate != null) {
       startDateC.text = DateFormat('dd-MM-yyyy').format(pickedDate);
@@ -44,12 +46,8 @@ class AnnualLeaveController extends GetxController {
 
   void selectEndDate() async {
     if (startDateC.text.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Silahkan pilih tanggal mulai terlebih dahulu',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomToast.errorToast(
+          'Perhatian', 'Silahkan pilih tanggal mulai terlebih dahulu');
       return;
     }
     DateTime initialDate = DateTime.now();
@@ -61,14 +59,16 @@ class AnnualLeaveController extends GetxController {
     }
 
     final DateTime? pickedDate = await showDatePicker(
-      context: Get.context!,
-      initialDate: initialDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-      selectableDayPredicate: (date) => date.isAfter(DateFormat('dd-MM-yyyy')
-          .parse(startDateC.text)
-          .subtract(const Duration(days: 1))),
-    );
+        context: Get.context!,
+        initialDate: initialDate,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2100),
+        selectableDayPredicate: (date) {
+          return date.weekday != DateTime.sunday &&
+              date.isAfter(DateFormat('dd-MM-yyyy')
+                  .parse(startDateC.text)
+                  .subtract(const Duration(days: 1)));
+        });
 
     if (pickedDate != null) {
       endDateC.text = DateFormat('dd-MM-yyyy').format(pickedDate);
@@ -85,21 +85,18 @@ class AnnualLeaveController extends GetxController {
 
     if (nameC.text.isEmpty ||
         reasonC.text.isEmpty ||
-        jobC.text.isEmpty ||
+        roleC.text.isEmpty ||
         dateRequestC.text.isEmpty ||
         startDateC.text.isEmpty ||
         endDateC.text.isEmpty) {
-      Get.snackbar(
-        'Perhatian',
-        'Semua form harus diisi',
-        backgroundColor: AppColor.error,
-        colorText: Colors.white,
-      );
+      CustomToast.errorToast('Perhatian', 'Semua form harus diisi');
       return;
     }
 
     Get.dialog(
       AlertDialog(
+        buttonPadding: EdgeInsets.zero,
+        actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         title: const Text('Konfirmasi'),
         content:
             const Text('Apakah anda yakin ingin mengirim pengajuan cuti ini?'),
@@ -115,7 +112,28 @@ class AnnualLeaveController extends GetxController {
             onPressed: () async {
               try {
                 isLoading.value = true;
-                print('Submitting form...'); // Add this line
+                Get.back();
+
+                // Show the loading indicator
+                Get.dialog(
+                  Center(
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: Color.fromRGBO(0, 103, 124, 1),
+                        ),
+                      ),
+                    ),
+                  ), // Show the loading indicator
+                  barrierDismissible:
+                      false, // Prevent the dialog from closing when the user taps outside it
+                );
 
                 // Fetch the employee's data
                 final employeeDoc = await FirebaseFirestore.instance
@@ -125,31 +143,65 @@ class AnnualLeaveController extends GetxController {
 
                 // Check if total_leave is 0
                 if (employeeDoc.data()?['total_leave'] == 0) {
-                  print('No leave left'); // Add this line
-                  Get.snackbar(
+                  Get.back(); // Close the loading indicator
+                  CustomToast.errorToast(
+                      'Perhatian', 'Anda tidak memiliki cuti tersisa');
+                  startDateC.clear();
+                  endDateC.clear();
+                  reasonC.clear();
+                  return; // Return from the function
+                }
+
+                // Calculate the duration of the requested leave
+                DateTime startDate =
+                    DateFormat('dd-MM-yyyy').parse(startDateC.text);
+                DateTime endDate =
+                    DateFormat('dd-MM-yyyy').parse(endDateC.text);
+                DateTime dateRequest =
+                    DateFormat('dd-MM-yyyy').parse(dateRequestC.text);
+
+                int requestedLeaveDuration = 0;
+                for (int i = 0;
+                    i <= endDate.difference(startDate).inDays;
+                    i++) {
+                  if (startDate.add(Duration(days: i)).weekday !=
+                      DateTime.sunday) {
+                    requestedLeaveDuration++;
+                  }
+                }
+
+                // Convert the DateTime objects to Timestamps
+                Timestamp startTimestamp = Timestamp.fromDate(startDate);
+                Timestamp endTimestamp = Timestamp.fromDate(endDate);
+                Timestamp dateRequestTimestamp =
+                    Timestamp.fromDate(dateRequest);
+
+                // Check if total_leave is enough for the requested leave
+                if (employeeDoc.data()?['total_leave'] <
+                    requestedLeaveDuration) {
+                  Get.back(); // Close the loading indicator
+                  CustomToast.errorToast(
                     'Gagal',
-                    'Anda tidak memiliki cuti tersisa',
-                    backgroundColor: AppColor.error,
-                    colorText: Colors.white,
+                    'Anda tidak memiliki cukup cuti untuk periode ini',
                   );
 
                   startDateC.clear();
                   endDateC.clear();
                   reasonC.clear();
-                  Future.delayed(const Duration(seconds: 2), () {
-                    Get.back(closeOverlays: true);
-                  });
+
                   return; // Return from the function
                 }
 
-                final leaveData = {
+                Map<String, dynamic> leaveData = {
+                  'leave_id': DateTime.now().millisecondsSinceEpoch.toString(),
                   'name': nameC.text,
                   'reason': reasonC.text,
-                  'job': jobC.text,
-                  'date_request': dateRequestC.text,
-                  'start_date': startDateC.text,
-                  'end_date': endDateC.text,
-                  'status': 'Belum Disetujui',
+                  'role': roleC.text,
+                  'date_request': dateRequestTimestamp,
+                  'start_date': startTimestamp,
+                  'end_date': endTimestamp,
+                  'manager_approval': 'Belum Disetujui',
+                  'hrd_approval': 'Belum Disetujui',
                 };
 
                 await FirebaseFirestore.instance
@@ -157,28 +209,21 @@ class AnnualLeaveController extends GetxController {
                     .doc(uid)
                     .collection('leave')
                     .add(leaveData);
+                Get.back(); // Close the loading indicator
 
-                print('Form submitted successfully'); // Add this line
-                Get.snackbar(
+                CustomToast.successToast(
                   'Sukses',
                   'Pengajuan cuti berhasil dikirim',
-                  backgroundColor: AppColor.success,
-                  colorText: Colors.white,
                 );
 
                 startDateC.clear();
                 endDateC.clear();
                 reasonC.clear();
-                Future.delayed(const Duration(seconds: 2), () {
-                  Get.back(closeOverlays: true);
-                });
               } catch (e) {
-                print('Error submitting leave form: $e');
-                Get.snackbar(
+                Get.back(); // Close the loading indicator
+                CustomToast.errorToast(
                   'Gagal',
                   'Pengajuan cuti gagal dikirim',
-                  backgroundColor: AppColor.error,
-                  colorText: Colors.white,
                 );
               } finally {
                 isLoading.value = false;

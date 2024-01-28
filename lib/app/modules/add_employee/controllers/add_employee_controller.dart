@@ -29,30 +29,26 @@ class AddEmployeeController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  final jobs = [
+  final roles = [
+    'HRD',
     'Manager',
     'Supervisor',
-    'HRD',
     'Accounting',
     'Leader',
     'PPC',
     'Operator',
   ];
-  final selectedJob = 'HRD'.obs;
+  final selectedRole = 'HRD'.obs;
 
   String getDefaultPassword() {
     return CompanyData.defaultPassword;
-  }
-
-  String getDefaultRole() {
-    return CompanyData.defaultRole;
   }
 
   Future<void> addEmployee() async {
     if (idC.text.isNotEmpty &&
         nameC.text.isNotEmpty &&
         emailC.text.isNotEmpty &&
-        selectedJob.isNotEmpty) {
+        selectedRole.isNotEmpty) {
       isLoading.value = true;
       CustomAlertDialog.confirmAdmin(
         title: 'Konfirmasi',
@@ -62,6 +58,27 @@ class AddEmployeeController extends GetxController {
           Get.back();
         },
         onConfirm: () async {
+          Get.back(); //close dialog confirm
+          Get.dialog(
+            Center(
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Color.fromRGBO(0, 103, 124, 1),
+                  ),
+                ),
+              ),
+            ), // Show the loading indicator
+            barrierDismissible:
+                false, // Prevent the dialog from closing when the user taps outside it
+          );
+
           if (isLoadingCreatePegawai.isFalse) {
             await createEmployeeData();
             isLoading.value = false;
@@ -71,7 +88,7 @@ class AddEmployeeController extends GetxController {
       );
     } else {
       isLoading.value = false;
-      CustomToast.errorToast('Gagal', 'Harap isi semua form');
+      CustomToast.errorToast('Gagal', 'Harap isi semua kolom');
     }
   }
 
@@ -85,7 +102,6 @@ class AddEmployeeController extends GetxController {
             email: adminEmail, password: adminPassC.text);
         //get default password
         String defaultPassword = getDefaultPassword();
-        String defaultRole = getDefaultRole();
         // if the password is match, then continue the create user process
         UserCredential employeeCredential =
             await auth.createUserWithEmailAndPassword(
@@ -101,8 +117,7 @@ class AddEmployeeController extends GetxController {
             "employee_id": idC.text,
             "name": nameC.text,
             "email": emailC.text,
-            "role": defaultRole,
-            "job": selectedJob.value,
+            "role": selectedRole.value,
             "created_at": DateTime.now().toIso8601String(),
             'total_leave': 12,
             'used_leave': 0,
@@ -118,28 +133,42 @@ class AddEmployeeController extends GetxController {
 
           // clear form
 
-          Get.back(); //close dialog
+          Get.back(); //close dialog loading
           Get.back(); //close form screen
           CustomToast.successToast('Sukses', 'Pegawai berhasil ditambahkan');
-
+          idC.clear();
+          nameC.clear();
+          emailC.clear();
+          adminPassC.clear();
           isLoadingCreatePegawai.value = false;
         }
       } on FirebaseAuthException catch (e) {
         isLoadingCreatePegawai.value = false;
         if (e.code == 'weak-password') {
+          Get.back(); //close dialog loading
+          adminPassC.clear();
           CustomToast.errorToast('Gagal', 'Kata sandi terlalu lemah');
         } else if (e.code == 'email-already-in-use') {
+          Get.back(); //close dialog loading
+          adminPassC.clear();
           CustomToast.errorToast('Gagal', 'Email sudah digunakan');
         } else if (e.code == 'wrong-password') {
+          Get.back(); //close dialog loading
+          adminPassC.clear();
           CustomToast.errorToast('Gagal', 'Kata sandi salah');
         } else {
+          Get.back(); //close dialog loading
+          adminPassC.clear();
           CustomToast.errorToast('Gagal', 'error : ${e.code}');
         }
       } catch (e) {
+        Get.back(); //close dialog loading
+        adminPassC.clear();
         isLoadingCreatePegawai.value = false;
         CustomToast.errorToast('Gagal', 'error : ${e.toString()}');
       }
     } else {
+      adminPassC.clear();
       CustomToast.errorToast('Gagal', 'Harap isi semua form');
     }
   }

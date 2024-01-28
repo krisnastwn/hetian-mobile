@@ -74,7 +74,7 @@ class LoginView extends GetView<LoginController> {
                     Container(
                       margin: const EdgeInsets.only(bottom: 24),
                       child: const Text(
-                        'Login',
+                        'Masuk',
                         style: TextStyle(
                           fontSize: 18,
                           fontFamily: 'poppins',
@@ -118,7 +118,7 @@ class LoginView extends GetView<LoginController> {
                           ),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           border: InputBorder.none,
-                          hintText: "ratnasari@gmail.com",
+                          hintText: "youremail@hetian.com",
                           hintStyle: TextStyle(
                             fontSize: 14,
                             fontFamily: 'poppins',
@@ -195,7 +195,7 @@ class LoginView extends GetView<LoginController> {
                           },
                           child: Text(
                             (controller.isLoading.isFalse)
-                                ? 'Login'
+                                ? 'Masuk'
                                 : 'Loading...',
                             style: const TextStyle(
                               fontSize: 16,

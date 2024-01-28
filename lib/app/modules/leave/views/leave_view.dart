@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:hetian_mobile/app/style/app_color.dart';
 import 'package:hetian_mobile/color_schemes.dart';
+import 'package:intl/intl.dart';
 
 import '../controllers/leave_controller.dart';
 
@@ -56,9 +57,9 @@ class LeaveView extends GetView<LeaveController> {
               itemCount: controller.leaves.length,
               itemBuilder: (context, index) {
                 var leave = controller.leaves[index];
-                String status = leave.status;
+                String hrdApproval = leave.hrdApproval;
                 Color containerColor;
-                switch (status) {
+                switch (hrdApproval) {
                   case "Disetujui":
                     containerColor = lightColorScheme.secondaryContainer;
                     break;
@@ -95,7 +96,8 @@ class LeaveView extends GetView<LeaveController> {
                           ),
                         ),
                         Text(
-                          (leave.requestDate),
+                          DateFormat('d MMMM y', 'id')
+                              .format(DateTime.parse(leave.requestDate)),
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -109,7 +111,7 @@ class LeaveView extends GetView<LeaveController> {
                           ),
                         ),
                         Text(
-                          (leave.status),
+                          (leave.hrdApproval),
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -123,7 +125,8 @@ class LeaveView extends GetView<LeaveController> {
                           ),
                         ),
                         Text(
-                          (leave.startDate),
+                          DateFormat('d MMMM y', 'id')
+                              .format(DateTime.parse(leave.startDate)),
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -137,7 +140,8 @@ class LeaveView extends GetView<LeaveController> {
                           ),
                         ),
                         Text(
-                          (leave.endDate),
+                          DateFormat('d MMMM y', 'id')
+                              .format(DateTime.parse(leave.endDate)),
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,

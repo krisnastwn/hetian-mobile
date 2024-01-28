@@ -32,25 +32,25 @@ class ChangePasswordController extends GetxController {
           await auth.currentUser!.updatePassword(newPassC.text);
 
           Get.back();
-          CustomToast.successToast('Success', 'success change password');
+          CustomToast.successToast('Sukses', 'Kata sandi berhasil diubah');
         } on FirebaseAuthException catch (e) {
           if (e.code == 'wrong-password') {
-            CustomToast.errorToast('Error', 'current password wrong');
+            CustomToast.errorToast('Gagal', 'Kata sandi lama salah');
           } else {
-            CustomToast.errorToast(
-                'Error', 'cant update password because : ${e.code}');
+            CustomToast.errorToast('Gagal', 'Terjadi kesalahan : ${e.code}');
           }
         } catch (e) {
-          CustomToast.errorToast('Error', 'error : ${e.toString()}');
+          CustomToast.errorToast(
+              'Gagal', 'Terjadi kesalahan : ${e.toString()}');
         } finally {
           isLoading.value = false;
         }
       } else {
-        CustomToast.errorToast(
-            'Error', 'new password and confirm password doesnt match');
+        CustomToast.errorToast('Gagal',
+            'Kata sandi baru dan konfirmasi kata sandi baru tidak sama');
       }
     } else {
-      CustomToast.errorToast('Error', 'all form must be filled');
+      CustomToast.errorToast('Gagal', 'Mohon isi semua kolom');
     }
   }
 }

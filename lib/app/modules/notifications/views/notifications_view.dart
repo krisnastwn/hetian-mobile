@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:hetian_mobile/app/style/app_color.dart';
@@ -10,10 +9,6 @@ class NotificationsView extends GetView<NotificationsController> {
   const NotificationsView({super.key});
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: lightColorScheme.primary,
-      statusBarIconBrightness: Brightness.light,
-    ));
     return Scaffold(
       appBar: AppBar(
         title: const Text(

@@ -32,9 +32,9 @@ class LeaveCard extends StatelessWidget {
                       // color: Color(0xFF00677C),
                     ),
                   ),
-                  //job
+                  //role
                   Text(
-                    userData["job"],
+                    userData["role"],
                     style: const TextStyle(
                       fontFamily: 'poppins',
                       fontWeight: FontWeight.w500,

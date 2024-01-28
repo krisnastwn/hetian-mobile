@@ -23,7 +23,7 @@ class NewPasswordController extends GetxController {
       if (passC.text == confirmPassC.text) {
         isLoading.value = true;
         if (passC.text != CompanyData.defaultPassword) {
-          _updatePassword();
+          await _updatePassword();
           isLoading.value = false;
         } else {
           CustomToast.errorToast('Gagal', 'Kata sandi tidak boleh sama');
@@ -37,7 +37,7 @@ class NewPasswordController extends GetxController {
     }
   }
 
-  void _updatePassword() async {
+  Future<void> _updatePassword() async {
     try {
       String email = auth.currentUser!.email!;
       await auth.currentUser!.updatePassword(passC.text);
