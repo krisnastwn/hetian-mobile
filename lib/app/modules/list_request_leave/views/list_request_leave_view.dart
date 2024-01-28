@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hetian_mobile/app/style/app_color.dart';
 import 'package:hetian_mobile/color_schemes.dart';
@@ -91,128 +92,202 @@ class ListRequestLeaveView extends GetView<ListRequestLeaveController> {
                             leaveData['manager_approval'] == 'Tidak Disetujui';
                     bool isButtonEnabled =
                         userRole != 'HRD' || isManagerApproved;
-                    return SingleChildScrollView(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: const EdgeInsets.all(16),
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 16),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                              color: AppColor.secondaryExtraSoft, width: 1),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              leaveData['name'],
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                            color: AppColor.secondaryExtraSoft, width: 1),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: lightColorScheme.primary,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
                               ),
                             ),
-                            Text(
-                              leaveData['role'],
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        leaveData['name'],
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Icon(FontAwesomeIcons.clock,
+                                              size: 12, color: Colors.white),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            DateFormat('d MMMM y', 'id').format(
+                                              (leaveData['date_request']
+                                                      as Timestamp)
+                                                  .toDate(),
+                                            ),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  Text(
+                                    leaveData['role'],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Tanggal Pengajuan',
-                              style: TextStyle(
-                                fontSize: 12,
-                              ),
+                          ),
+                          const SizedBox(height: 8),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Manager',
+                                    ),
+                                    Text(
+                                      leaveData['manager_approval'],
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    const Text(
+                                      'HRD',
+                                    ),
+                                    Text(
+                                      leaveData['hrd_approval'],
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            Text(
-                              DateFormat('dd-MM-yyyy').format(
-                                (leaveData['date_request'] as Timestamp)
-                                    .toDate(),
-                              ),
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Divider(
+                              color: AppColor.secondaryExtraSoft,
+                              thickness: 1,
                             ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Manager',
-                              style: TextStyle(
-                                fontSize: 12,
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Dari Tanggal',
+                                    ),
+                                    Text(
+                                      DateFormat('d MMMM y', 'id').format(
+                                        (leaveData['start_date'] as Timestamp)
+                                            .toDate(),
+                                      ),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    const Text(
+                                      'Sampai Tanggal',
+                                    ),
+                                    Text(
+                                      DateFormat('d MMMM y', 'id').format(
+                                        (leaveData['end_date'] as Timestamp)
+                                            .toDate(),
+                                      ),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            Text(
-                              leaveData['manager_approval'],
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Divider(
+                              color: AppColor.secondaryExtraSoft,
+                              thickness: 1,
                             ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'HRD',
-                              style: TextStyle(
-                                fontSize: 12,
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Column(
+                              children: [
+                                const Text(
+                                  'Alasan',
+                                ),
+                                Text(
+                                  leaveData['reason'],
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              leaveData['hrd_approval'],
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Divider(
+                              color: AppColor.secondaryExtraSoft,
+                              thickness: 1,
                             ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Dari Tanggal',
-                              style: TextStyle(
-                                fontSize: 12,
-                              ),
-                            ),
-                            Text(
-                              DateFormat('dd-MM-yyyy').format(
-                                (leaveData['start_date'] as Timestamp).toDate(),
-                              ),
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Sampai Tanggal',
-                              style: TextStyle(
-                                fontSize: 12,
-                              ),
-                            ),
-                            Text(
-                              DateFormat('dd-MM-yyyy').format(
-                                (leaveData['end_date'] as Timestamp).toDate(),
-                              ),
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Alasan',
-                              style: TextStyle(
-                                fontSize: 12,
-                              ),
-                            ),
-                            Text(
-                              leaveData['reason'],
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16, right: 16, bottom: 8),
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
@@ -249,8 +324,8 @@ class ListRequestLeaveView extends GetView<ListRequestLeaveController> {
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     );
                   },

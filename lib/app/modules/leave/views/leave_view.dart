@@ -52,6 +52,10 @@ class LeaveView extends GetView<LeaveController> {
                 color: Color.fromRGBO(0, 103, 124, 1),
               ),
             );
+          } else if (controller.leaves.isEmpty) {
+            return const Center(
+              child: Text('Tidak ada data cuti'),
+            );
           } else {
             return ListView.builder(
               itemCount: controller.leaves.length,
