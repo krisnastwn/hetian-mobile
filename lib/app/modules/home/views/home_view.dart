@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hetian_mobile/app/modules/custom_salomon_navbar/controllers/custom_salomon_navbar_controller.dart';
-import 'package:hetian_mobile/app/style/app_color.dart';
 import 'package:hetian_mobile/app/widgets/leave_tile.dart';
 import 'package:hetian_mobile/color_schemes.dart';
 import 'package:hetian_mobile/app/routes/app_pages.dart';
