@@ -263,6 +263,7 @@ class ListRequestLeaveView extends GetView<ListRequestLeaveController> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
                                   'Alasan',

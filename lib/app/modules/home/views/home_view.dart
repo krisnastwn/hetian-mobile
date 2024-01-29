@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hetian_mobile/app/modules/custom_salomon_navbar/controllers/custom_salomon_navbar_controller.dart';
+import 'package:hetian_mobile/app/style/app_color.dart';
 import 'package:hetian_mobile/app/widgets/leave_tile.dart';
 import 'package:hetian_mobile/color_schemes.dart';
 import 'package:hetian_mobile/app/routes/app_pages.dart';
@@ -92,10 +93,9 @@ class HomeView extends GetView<HomeController> {
                         ),
 
                         // section 2 - history
-                        Expanded(
-                          child: ListView(
-                            shrinkWrap: true,
-                            physics: const ClampingScrollPhysics(),
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               StreamBuilder<
                                   QuerySnapshot<Map<String, dynamic>>>(
@@ -117,9 +117,17 @@ class HomeView extends GetView<HomeController> {
                                                 Map<String, dynamic>>>
                                         listLeave = snapshot.data!.docs;
                                     if (listLeave.isEmpty) {
-                                      return const Center(
-                                        child: Text(
-                                          'Tidak ada riwayat cuti',
+                                      return const Flexible(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Center(
+                                              child: Text(
+                                                "Tidak ada riwayat cuti",
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       );
                                     }

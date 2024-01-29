@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:hetian_mobile/app/widgets/toast/custom_toast.dart';
 
 class ListRequestLeaveController extends GetxController {
-
   Stream<QuerySnapshot<Object?>> streamLeaveRequest(String role) async* {
     Query query = FirebaseFirestore.instance.collectionGroup("leave");
 
@@ -107,6 +106,9 @@ class ListRequestLeaveController extends GetxController {
                             .collection('leave')
                             .doc(leaveId)
                             .update({'manager_approval': 'Disetujui'});
+                        Get.back();
+                        CustomToast.successToast(
+                            'Berhasil', 'Pengajuan cuti berhasil disetujui');
                       } else if (role == "HRD") {
                         await FirebaseFirestore.instance
                             .collection('employee')
@@ -114,6 +116,9 @@ class ListRequestLeaveController extends GetxController {
                             .collection('leave')
                             .doc(leaveId)
                             .update({'hrd_approval': 'Disetujui'});
+                        Get.back();
+                        CustomToast.successToast(
+                            'Berhasil', 'Pengajuan cuti berhasil disetujui');
                       }
 
                       // Fetch the leaveDoc again to get the updated manager_approval and hrd_approval fields
@@ -139,9 +144,6 @@ class ListRequestLeaveController extends GetxController {
                           'used_leave': usedLeave
                         });
                       }
-                      Get.back();
-                      CustomToast.successToast(
-                          'Berhasil', 'Pengajuan cuti berhasil disetujui');
                     } else {
                       Get.back();
                       CustomToast.errorToast('Gagal', 'Sisa cuti tidak cukup');
@@ -155,7 +157,6 @@ class ListRequestLeaveController extends GetxController {
                   CustomToast.errorToast(
                       'Gagal', 'Pengajuan cuti tidak ditemukan');
                 }
-                Get.back();
               } catch (e) {
                 if (e is FirebaseException && e.code == 'not-found') {
                   Get.back();
