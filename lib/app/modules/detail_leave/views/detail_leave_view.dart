@@ -18,7 +18,6 @@ class DetailLeaveView extends GetView<DetailLeaveController> {
 
   @override
   Widget build(BuildContext context) {
-    DetailLeaveController controller = Get.find();
     var style = const TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w600,
@@ -39,11 +38,18 @@ class DetailLeaveView extends GetView<DetailLeaveController> {
     controller.leaveData.assignAll(leaveData);
     String managerApproval = leaveData["manager_approval"];
     String hrdApproval = leaveData["hrd_approval"];
+    String cancelStatus = leaveData["cancel_status"];
 
     Color containerColor;
 
-    if (managerApproval == "Disetujui" && hrdApproval == "Disetujui") {
+    if (managerApproval == "Disetujui" &&
+        hrdApproval == "Disetujui" &&
+        cancelStatus == "Belum Dibatalkan") {
       containerColor = lightColorScheme.primary;
+    } else if (managerApproval == "Disetujui" &&
+        hrdApproval == "Disetujui" &&
+        cancelStatus == "Dibatalkan") {
+      containerColor = const Color.fromRGBO(223, 27, 27, 1);
     } else if (managerApproval == "Belum Disetujui" ||
         hrdApproval == "Belum Disetujui") {
       containerColor = lightColorScheme.primary;
@@ -151,22 +157,10 @@ class DetailLeaveView extends GetView<DetailLeaveController> {
                             ),
                             child: Obx(
                               () => Text(
-                                (hrdApproval),
-                                style: TextStyle(
-                                  color: (() {
-                                    switch (
-                                        controller.leaveData["hrd_approval"]) {
-                                      case "Disetujui":
-                                        return const Color.fromRGBO(
-                                            0, 103, 124, 1);
-                                      case "Tidak Disetujui":
-                                        return const Color.fromRGBO(
-                                            223, 27, 27, 1);
-                                      default:
-                                        return const Color.fromRGBO(
-                                            0, 103, 124, 1);
-                                    }
-                                  })(),
+                                leaveData["cancel_status"] == "Dibatalkan"
+                                    ? leaveData["cancel_status"]
+                                    : leaveData["hrd_approval"],
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -178,8 +172,7 @@ class DetailLeaveView extends GetView<DetailLeaveController> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -290,61 +283,69 @@ class DetailLeaveView extends GetView<DetailLeaveController> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Divider(
-                      color: AppColor.secondaryExtraSoft,
-                      thickness: 1,
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, bottom: 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              controller.toggleEdit();
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                  color: Color.fromRGBO(0, 103, 124, 1),
-                                  width: 1),
-                            ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.edit, size: 16),
-                                SizedBox(width: 8),
-                                Text('Ubah'),
-                              ],
-                            ),
+                  const SizedBox(height: 8),
+                  leaveData["hrd_approval"] == "Dibatalkan" ||
+                          leaveData["hrd_approval"] == "Tidak Disetujui"
+                      ? const SizedBox()
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Divider(
+                            color: AppColor.secondaryExtraSoft,
+                            thickness: 1,
                           ),
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: () {
-                              controller.deleteLeave(leaveData["doc_id"]);
-                            },
-                            style: FilledButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromRGBO(223, 27, 27, 1),
-                            ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.delete, size: 16),
-                                SizedBox(width: 8),
-                                Text('Hapus'),
-                              ],
-                            ),
+                  leaveData["hrd_approval"] == "Dibatalkan" ||
+                          leaveData["hrd_approval"] == "Tidak Disetujui"
+                      ? const SizedBox()
+                      : Padding(
+                          padding: const EdgeInsets.only(
+                              left: 16, right: 16, bottom: 8),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: OutlinedButton(
+                                  onPressed: () {
+                                    controller.toggleEdit();
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    side: const BorderSide(
+                                        color: Color.fromRGBO(0, 103, 124, 1),
+                                        width: 1),
+                                  ),
+                                  child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.edit, size: 16),
+                                      SizedBox(width: 8),
+                                      Text('Ubah'),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: FilledButton(
+                                  onPressed: () {
+                                    controller.cancelLeaveRequest(
+                                        leaveData["doc_id"]);
+                                  },
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromRGBO(223, 27, 27, 1),
+                                  ),
+                                  child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.cancel, size: 16),
+                                      SizedBox(width: 8),
+                                      Text('Batalkan'),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -402,6 +403,8 @@ class DetailLeaveView extends GetView<DetailLeaveController> {
                           height: 50,
                           child: FilledButton(
                               onPressed: () {
+                                print(leaveData["doc_id"]);
+                                print('pressed');
                                 controller
                                     .editLeaveRequest(
                                   leaveData["doc_id"],
@@ -416,9 +419,7 @@ class DetailLeaveView extends GetView<DetailLeaveController> {
                                         updatedLeaveData["start_date"]
                                     ..["end_date"] =
                                         updatedLeaveData["end_date"]
-                                    ..["reason"] = updatedLeaveData["reason"]
-                                    ..["hrd_approval"] =
-                                        updatedLeaveData["hrd_approval"];
+                                    ..["reason"] = updatedLeaveData["reason"];
 
                                   // Notify GetX to rebuild the widgets
                                   controller.update();

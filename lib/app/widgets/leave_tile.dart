@@ -14,11 +14,18 @@ class LeaveTile extends StatelessWidget {
   Widget build(BuildContext context) {
     String managerApproval = leaveData["manager_approval"] ?? "Belum Disetujui";
     String hrdApproval = leaveData["hrd_approval"] ?? "Belum Disetujui";
+    String cancelStatus = leaveData["cancel_status"] ?? "Dibatalkan";
 
     Color containerColor;
 
-    if (managerApproval == "Disetujui" && hrdApproval == "Disetujui") {
+    if (managerApproval == "Disetujui" &&
+        hrdApproval == "Disetujui" &&
+        cancelStatus == "Belum Dibatalkan") {
       containerColor = lightColorScheme.secondaryContainer;
+    } else if (managerApproval == "Disetujui" &&
+        hrdApproval == "Disetujui" &&
+        cancelStatus == "Dibatalkan") {
+      containerColor = const Color(0xFFFFD1DB);
     } else if (managerApproval == "Belum Disetujui" ||
         hrdApproval == "Belum Disetujui") {
       containerColor = Colors.white;
@@ -74,7 +81,9 @@ class LeaveTile extends StatelessWidget {
                   style: TextStyle(fontSize: 12),
                 ),
                 Text(
-                  (hrdApproval),
+                  leaveData['cancel_status'] == "Dibatalkan"
+                      ? cancelStatus
+                      : hrdApproval,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,

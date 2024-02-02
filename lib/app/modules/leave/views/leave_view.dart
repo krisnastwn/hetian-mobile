@@ -62,20 +62,22 @@ class LeaveView extends GetView<LeaveController> {
               itemBuilder: (context, index) {
                 var leave = controller.leaves[index];
                 String hrdApproval = leave.hrdApproval;
+                String cancelStatus = leave.cancelStatus;
                 Color containerColor;
-                switch (hrdApproval) {
-                  case "Disetujui":
-                    containerColor = lightColorScheme.secondaryContainer;
-                    break;
-                  case "Belum Disetujui":
-                    containerColor = Colors.white;
-                    break;
-                  case "Tidak Disetujui":
-                    containerColor = const Color(0xFFFFD1DB);
-                    break;
-                  default:
-                    containerColor = Colors.white;
-                    break;
+                if (hrdApproval == "Disetujui" &&
+                    cancelStatus == "Belum Dibatalkan") {
+                  containerColor = lightColorScheme.secondaryContainer;
+                } else if (hrdApproval == "Disetujui" &&
+                    cancelStatus == "Dibatalkan") {
+                  containerColor = const Color(0xFFFFD1DB);
+                } else if (hrdApproval == "Belum Disetujui") {
+                  containerColor = Colors.white;
+                } else if (hrdApproval == "Tidak Disetujui") {
+                  containerColor = const Color(0xFFFFD1DB);
+                } else if (hrdApproval == "Disetujui") {
+                  containerColor = const Color(0xFFFFD1DB);
+                } else {
+                  containerColor = Colors.white;
                 }
                 return SingleChildScrollView(
                   child: Container(
@@ -115,7 +117,9 @@ class LeaveView extends GetView<LeaveController> {
                           ),
                         ),
                         Text(
-                          (leave.hrdApproval),
+                          leave.cancelStatus == 'Dibatalkan'
+                              ? 'Dibatalkan'
+                              : hrdApproval,
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
