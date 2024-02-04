@@ -155,15 +155,13 @@ class DetailLeaveView extends GetView<DetailLeaveController> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Obx(
-                              () => Text(
-                                leaveData["cancel_status"] == "Dibatalkan"
-                                    ? leaveData["cancel_status"]
-                                    : leaveData["hrd_approval"],
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            child: Text(
+                              leaveData["cancel_status"] == "Dibatalkan"
+                                  ? leaveData["cancel_status"]
+                                  : leaveData["hrd_approval"],
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),

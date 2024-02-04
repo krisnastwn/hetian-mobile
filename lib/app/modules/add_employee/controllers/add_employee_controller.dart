@@ -135,7 +135,7 @@ class AddEmployeeController extends GetxController {
 
           Get.back(); //close dialog loading
           Get.back(); //close form screen
-          CustomToast.successToast('Sukses', 'Pegawai berhasil ditambahkan');
+          CustomToast.successToast('Sukses', 'Karyawan berhasil ditambahkan');
           idC.clear();
           nameC.clear();
           emailC.clear();

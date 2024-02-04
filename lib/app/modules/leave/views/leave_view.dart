@@ -20,7 +20,7 @@ class LeaveView extends GetView<LeaveController> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Detail Cuti Pegawai',
+          'Detail Cuti Karyawan',
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
         leading: IconButton(

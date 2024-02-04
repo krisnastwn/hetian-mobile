@@ -15,7 +15,7 @@ class EmployeeView extends GetView<EmployeeController> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Daftar Cuti Pegawai',
+          'Daftar Cuti Karyawan',
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
         leading: IconButton(
@@ -51,7 +51,7 @@ class EmployeeView extends GetView<EmployeeController> {
                   Icons.search,
                   color: Colors.grey,
                 ),
-                hintText: 'Cari Pegawai',
+                hintText: 'Cari Karyawan',
                 hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
