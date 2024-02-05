@@ -1,12 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hetian_mobile/app/controllers/page_index_controller.dart';
 import 'package:hetian_mobile/app/routes/app_pages.dart';
 import 'package:hetian_mobile/app/widgets/toast/custom_toast.dart';
 
 class LoginController extends GetxController {
-  final pageIndexController = Get.find<PageIndexController>();
   RxBool isLoading = false.obs;
   RxBool obsecureText = true.obs;
   TextEditingController emailC = TextEditingController();
@@ -31,7 +29,7 @@ class LoginController extends GetxController {
             if (passC.text == 'qwertyuiop') {
               Get.toNamed(Routes.NEW_PASSWORD);
             } else {
-              Get.offAllNamed(Routes.CUSTOM_SALOMON_NAVBAR);
+              Get.offAllNamed(Routes.NAVIGATION_BAR);
             }
           } else {
             Get.dialog(
