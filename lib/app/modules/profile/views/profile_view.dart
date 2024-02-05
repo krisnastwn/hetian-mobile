@@ -171,7 +171,7 @@ class ProfileView extends GetView<ProfileController> {
                                 (userData["role"] == "HRD" ||
                                         userData["role"] == "Manager")
                                     ? MenuTile(
-                                        title: 'Daftar Pengajuan Cuti',
+                                        title: 'Pengajuan & Pembatalan Cuti',
                                         icon: Center(
                                           child: FaIcon(
                                             FontAwesomeIcons.listCheck,

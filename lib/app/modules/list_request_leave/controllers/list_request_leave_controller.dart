@@ -127,6 +127,7 @@ class ListRequestLeaveController extends GetxController {
                             .collection('leave')
                             .doc(leaveId)
                             .update({'manager_approval': 'Disetujui'});
+
                         Get.back();
                         CustomToast.successToast('Berhasil', toastContent);
                       }
@@ -140,6 +141,7 @@ class ListRequestLeaveController extends GetxController {
                               .collection('leave')
                               .doc(leaveId)
                               .update({'hrd_approval': 'Disetujui'});
+
                           Get.back();
                           CustomToast.successToast(
                               'Berhasil', 'Pembatalan cuti berhasil disetujui');

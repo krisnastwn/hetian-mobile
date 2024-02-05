@@ -30,26 +30,24 @@ class HomeView extends GetView<HomeController> {
                   appBar: AppBar(
                     elevation: 0,
                     scrolledUnderElevation: 0,
-                    centerTitle: true,
                     title: Text(
-                      'Hi, Selamat Datang!\n ${user['name']}',
-                      textAlign: TextAlign.center,
+                      'Hi, Selamat Datang!\n${user['name']}',
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          color: Color.fromRGBO(0, 103, 124, 1), fontSize: 14),
+                          color: Color.fromRGBO(0, 103, 124, 1),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
                     ),
-                    leadingWidth: 64,
-                    leading: Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: CircleAvatar(
-                        radius: 30,
+                    actions: [
+                      CircleAvatar(
+                        radius: 24,
                         backgroundImage: CachedNetworkImageProvider(
                           user['avatar'] == null || user['avatar'] == ""
-                              ? "https://ui-avatars.com/api/?name=${user['name']}/"
+                              ? "https://ui-avatars.com/api/?name=${user['name']}&size=512/"
                               : user['avatar'],
                         ),
                       ),
-                    ),
-                    actions: [
+                      const SizedBox(width: 8),
                       Container(
                         height: 48,
                         width: 65,
@@ -92,71 +90,59 @@ class HomeView extends GetView<HomeController> {
                         ),
 
                         // section 2 - history
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              StreamBuilder<
-                                  QuerySnapshot<Map<String, dynamic>>>(
-                                stream: controller.streamHistoryLeave(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(
-                                        color: Color.fromRGBO(0, 103, 124, 1),
-                                      ),
-                                    );
-                                  } else if (snapshot.connectionState ==
-                                          ConnectionState.active ||
-                                      snapshot.connectionState ==
-                                          ConnectionState.done) {
-                                    List<
-                                            QueryDocumentSnapshot<
-                                                Map<String, dynamic>>>
-                                        listLeave = snapshot.data!.docs;
-                                    if (listLeave.isEmpty) {
-                                      return const Flexible(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Center(
-                                              child: Text(
-                                                "Tidak ada riwayat cuti",
-                                              ),
-                                            ),
-                                          ],
+                        StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                          stream: controller.streamHistoryLeave(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                  color: Color.fromRGBO(0, 103, 124, 1),
+                                ),
+                              );
+                            } else if (snapshot.connectionState ==
+                                    ConnectionState.active ||
+                                snapshot.connectionState ==
+                                    ConnectionState.done) {
+                              List<QueryDocumentSnapshot<Map<String, dynamic>>>
+                                  listLeave = snapshot.data!.docs;
+                              if (listLeave.isEmpty) {
+                                return const Flexible(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          "Tidak ada riwayat cuti",
                                         ),
-                                      );
-                                    }
-                                    return ListView.separated(
-                                      itemCount: listLeave.length,
-                                      shrinkWrap: true,
-                                      physics: const ClampingScrollPhysics(),
-                                      padding: EdgeInsets.zero,
-                                      separatorBuilder: (context, index) =>
-                                          const SizedBox(height: 16),
-                                      itemBuilder: (context, index) {
-                                        QueryDocumentSnapshot<
-                                                Map<String, dynamic>> doc =
-                                            listLeave[index];
-                                        Map<String, dynamic> leaveData =
-                                            doc.data();
-                                        leaveData['doc_id'] = doc.id;
-                                        return LeaveTile(
-                                          leaveData: leaveData,
-                                        );
-                                      },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              return Expanded(
+                                child: ListView.separated(
+                                  itemCount: listLeave.length,
+                                  shrinkWrap: true,
+                                  physics: const ClampingScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(height: 16),
+                                  itemBuilder: (context, index) {
+                                    QueryDocumentSnapshot<Map<String, dynamic>>
+                                        doc = listLeave[index];
+                                    Map<String, dynamic> leaveData = doc.data();
+                                    leaveData['doc_id'] = doc.id;
+                                    return LeaveTile(
+                                      leaveData: leaveData,
                                     );
-                                  } else {
-                                    return const SizedBox();
-                                  }
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                            ],
-                          ),
+                                  },
+                                ),
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          },
                         ),
                       ],
                     ),

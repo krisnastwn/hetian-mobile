@@ -169,8 +169,21 @@ class DetailLeaveView extends GetView<DetailLeaveController> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      leaveData["cancel_status"] == "Dibatalkan"
+                          ? 'Status Pembatalan Cuti'
+                          : 'Status Pengajuan Cuti',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
+                    padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -223,14 +236,6 @@ class DetailLeaveView extends GetView<DetailLeaveController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Status Pengajuan Cuti',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -400,30 +405,28 @@ class DetailLeaveView extends GetView<DetailLeaveController> {
                         SizedBox(
                           height: 50,
                           child: FilledButton(
-                              onPressed: () {
-                                print(leaveData["doc_id"]);
-                                print('pressed');
-                                controller
-                                    .editLeaveRequest(
-                                  leaveData["doc_id"],
-                                  controller.startDateC.text,
-                                  controller.endDateC.text,
-                                  controller.reasonC.text,
-                                )
-                                    .then((updatedLeaveData) {
-                                  // Update leaveData with the updated data
-                                  leaveData
-                                    ..["start_date"] =
-                                        updatedLeaveData["start_date"]
-                                    ..["end_date"] =
-                                        updatedLeaveData["end_date"]
-                                    ..["reason"] = updatedLeaveData["reason"];
+                            onPressed: () {
+                              controller
+                                  .editLeaveRequest(
+                                leaveData["doc_id"],
+                                controller.startDateC.text,
+                                controller.endDateC.text,
+                                controller.reasonC.text,
+                              )
+                                  .then((updatedLeaveData) {
+                                // Update leaveData with the updated data
+                                leaveData
+                                  ..["start_date"] =
+                                      updatedLeaveData["start_date"]
+                                  ..["end_date"] = updatedLeaveData["end_date"]
+                                  ..["reason"] = updatedLeaveData["reason"];
 
-                                  // Notify GetX to rebuild the widgets
-                                  controller.update();
-                                });
-                              },
-                              child: const Text('Kirim')),
+                                // Notify GetX to rebuild the widgets
+                                controller.update();
+                              });
+                            },
+                            child: const Text('Kirim'),
+                          ),
                         ),
                       ],
                     ),

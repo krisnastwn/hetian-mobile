@@ -27,7 +27,7 @@ class ListRequestLeaveView extends GetView<ListRequestLeaveController> {
           return Scaffold(
             appBar: AppBar(
               title: const Text(
-                'Daftar Pengajuan Cuti',
+                'Daftar Pengajuan & Pembatalan Cuti',
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               leading: IconButton(
