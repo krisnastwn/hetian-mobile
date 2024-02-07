@@ -61,7 +61,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
           CustomInput(
             controller: controller.nameC,
             label: 'Nama Lengkap',
-            hint: 'Joko Susilo',
+            hint: 'Rika Ratnasari',
             textInputAction: TextInputAction.next,
             focusNode: controller.nameFocusNode,
             onSubmitted: (value) {
@@ -72,7 +72,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
           CustomInput(
             controller: controller.emailC,
             label: 'Email',
-            hint: 'jokosusilo@hetian.com',
+            hint: 'rikaratnasari@hetian.com',
             textInputAction: TextInputAction.next,
             focusNode: controller.emailFocusNode,
           ),

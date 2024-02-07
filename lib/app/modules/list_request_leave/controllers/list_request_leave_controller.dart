@@ -214,6 +214,10 @@ class ListRequestLeaveController extends GetxController {
                 } else {
                   rethrow;
                 }
+              } finally {
+                if (Get.isDialogOpen!) {
+                  Get.back();
+                }
               }
             },
           ),
@@ -287,6 +291,10 @@ class ListRequestLeaveController extends GetxController {
                   CustomToast.errorToast('Gagal', 'Data tidak ditemukan');
                 } else {
                   rethrow;
+                }
+              } finally {
+                if (Get.isDialogOpen!) {
+                  Get.back();
                 }
               }
             },
