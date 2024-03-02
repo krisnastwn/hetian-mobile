@@ -30,10 +30,14 @@ class AnnualLeaveController extends GetxController {
   }
 
   void selectStartDate() async {
+    DateTime initialDate = DateTime.now().add(const Duration(days: 1));
+    while (initialDate.weekday == DateTime.sunday) {
+      initialDate = initialDate.add(const Duration(days: 1));
+    }
     final DateTime? pickedDate = await showDatePicker(
         context: Get.context!,
-        initialDate: DateTime.now().add(const Duration(days: 1)),
-        firstDate: DateTime.now().add(const Duration(days: 1)),
+        initialDate: initialDate,
+        firstDate: initialDate,
         lastDate: DateTime(2100),
         selectableDayPredicate: (date) {
           return date.weekday != DateTime.sunday;
