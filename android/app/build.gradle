@@ -2,6 +2,7 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
 }
 
 def localProperties = new Properties()
@@ -70,5 +71,3 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:+"
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
 }
-
-apply plugin: 'com.google.gms.google-services'

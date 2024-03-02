@@ -86,12 +86,19 @@ class ListRequestLeaveView extends GetView<ListRequestLeaveController> {
                     var leaveId = listLeave[index].id;
                     var employeeId =
                         listLeave[index].reference.parent.parent?.id;
-
                     bool isManagerApproved =
-                        leaveData['manager_approval'] == 'Disetujui' ||
-                            leaveData['manager_approval'] == 'Tidak Disetujui';
-                    bool isButtonEnabled =
-                        userRole != 'HRD' || isManagerApproved;
+                        leaveData['manager_approval'] == 'Disetujui';
+                    bool isManagerRejected =
+                        leaveData['manager_approval'] == 'Tidak Disetujui';
+                    bool isNewRequest = leaveData['manager_approval'] == 'Belum Disetujui' &&
+                        leaveData['hrd_approval'] == 'Belum Disetujui';
+                    bool isApproveButtonEnabled =
+                        (userRole == 'Manager' && isNewRequest) ||
+                            (userRole == 'HRD' && isManagerApproved);
+                    bool isRejectButtonEnabled =
+                        (userRole == 'Manager' && isNewRequest) ||
+                            (userRole == 'HRD' && isManagerRejected);
+
                     if (leaveData['cancel_status'] == 'Dibatalkan') {
                       return RequestLeaveCard(
                         color: const Color.fromRGBO(223, 27, 27, 1),
@@ -110,7 +117,7 @@ class ListRequestLeaveView extends GetView<ListRequestLeaveController> {
                         hrdApproval: leaveData['hrd_approval'],
                         reason: leaveData['reason'],
                         title: 'Status Pembatalan Cuti',
-                        onReject: isButtonEnabled
+                        onReject: isRejectButtonEnabled
                             ? () async {
                                 if (employeeId != null) {
                                   controller.rejectLeave(
@@ -118,7 +125,7 @@ class ListRequestLeaveView extends GetView<ListRequestLeaveController> {
                                 }
                               }
                             : null,
-                        onApprove: isButtonEnabled
+                        onApprove: isApproveButtonEnabled
                             ? () {
                                 if (employeeId != null) {
                                   controller.approveLeave(
@@ -146,7 +153,7 @@ class ListRequestLeaveView extends GetView<ListRequestLeaveController> {
                         hrdApproval: leaveData['hrd_approval'],
                         reason: leaveData['reason'],
                         title: 'Status Pengajuan Cuti',
-                        onReject: isButtonEnabled
+                        onReject: isRejectButtonEnabled
                             ? () async {
                                 if (employeeId != null) {
                                   controller.rejectLeave(
@@ -154,7 +161,7 @@ class ListRequestLeaveView extends GetView<ListRequestLeaveController> {
                                 }
                               }
                             : null,
-                        onApprove: isButtonEnabled
+                        onApprove: isApproveButtonEnabled
                             ? () {
                                 if (employeeId != null) {
                                   controller.approveLeave(
