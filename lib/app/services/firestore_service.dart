@@ -62,8 +62,12 @@ class FirestoreService {
             .toDate()
             .toString(),
         reason: (doc.data() as Map<String, dynamic>)['reason'] as String,
-        managerApproval: (doc.data() as Map<String, dynamic>)['manager_approval'] as String,
-        hrdApproval: (doc.data() as Map<String, dynamic>)['hrd_approval'] as String,
+        managerApproval:
+            (doc.data() as Map<String, dynamic>)['manager_approval'] as String,
+        hrdApproval:
+            (doc.data() as Map<String, dynamic>)['hrd_approval'] as String,
+        cancelStatus:
+            (doc.data() as Map<String, dynamic>)['cancel_status'] as String,
       );
     }).toList();
 

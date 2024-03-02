@@ -16,14 +16,30 @@ class ListRequestLeaveController extends GetxController {
     yield* query.orderBy("date_request", descending: true).snapshots();
   }
 
-  void approveLeave(String leaveId, String employeeId, String role) {
+  void approveLeave(String leaveId, String employeeId, String role) async {
+    final leaveDoc = await FirebaseFirestore.instance
+        .collection('employee')
+        .doc(employeeId)
+        .collection('leave')
+        .doc(leaveId)
+        .get();
+
+    String dialogContent =
+        'Apakah anda yakin ingin menyetujui pengajuan cuti ini?';
+    if (leaveDoc.data()?['cancel_status'] == 'Dibatalkan') {
+      dialogContent = 'Apakah anda yakin ingin menyetujui pembatalan cuti ini?';
+    }
+    String toastContent = 'Pengajuan cuti berhasil disetujui';
+    if (leaveDoc.data()?['cancel_status'] == 'Dibatalkan') {
+      toastContent = 'Pembatalan cuti berhasil disetujui';
+    }
+
     Get.dialog(
       AlertDialog(
         buttonPadding: EdgeInsets.zero,
         actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         title: const Text('Konfirmasi'),
-        content: const Text(
-            'Apakah anda yakin ingin menyetujui pengajuan cuti ini?'),
+        content: Text(dialogContent),
         actions: [
           TextButton(
             child: const Text('Batal'),
@@ -70,8 +86,11 @@ class ListRequestLeaveController extends GetxController {
                     .get();
 
                 if (employeeDoc.exists && leaveDoc.exists) {
-                  int totalLeave = employeeDoc.data()?['total_leave'] ?? 0;
-                  int usedLeave = employeeDoc.data()?['used_leave'] ?? 0;
+                  int newTotalLeave = employeeDoc.data()?['total_leave'] ?? 0;
+                  int newUsedLeave = employeeDoc.data()?['used_leave'] ?? 0;
+                  int cancelTotalLeave =
+                      employeeDoc.data()?['total_leave'] ?? 0;
+                  int cancelUsedLeave = employeeDoc.data()?['used_leave'] ?? 0;
 
                   // Check if the 'start_date' and 'end_date' fields exist and are Timestamps
                   if (leaveDoc.data()?['start_date'] is Timestamp &&
@@ -95,9 +114,11 @@ class ListRequestLeaveController extends GetxController {
                       }
                     }
 
-                    if (totalLeave >= requestedLeaveDuration) {
-                      totalLeave -= requestedLeaveDuration;
-                      usedLeave += requestedLeaveDuration;
+                    if (newTotalLeave >= requestedLeaveDuration) {
+                      newTotalLeave -= requestedLeaveDuration;
+                      newUsedLeave += requestedLeaveDuration;
+                      cancelTotalLeave += requestedLeaveDuration;
+                      cancelUsedLeave -= requestedLeaveDuration;
 
                       if (role == "Manager") {
                         await FirebaseFirestore.instance
@@ -106,19 +127,36 @@ class ListRequestLeaveController extends GetxController {
                             .collection('leave')
                             .doc(leaveId)
                             .update({'manager_approval': 'Disetujui'});
+
                         Get.back();
-                        CustomToast.successToast(
-                            'Berhasil', 'Pengajuan cuti berhasil disetujui');
-                      } else if (role == "HRD") {
-                        await FirebaseFirestore.instance
-                            .collection('employee')
-                            .doc(employeeId)
-                            .collection('leave')
-                            .doc(leaveId)
-                            .update({'hrd_approval': 'Disetujui'});
-                        Get.back();
-                        CustomToast.successToast(
-                            'Berhasil', 'Pengajuan cuti berhasil disetujui');
+                        CustomToast.successToast('Berhasil', toastContent);
+                      }
+                      if (role == "HRD") {
+                        if (leaveDoc.data()?['cancel_status'] == 'Dibatalkan') {
+                          // If the leave request is cancelled, increment total_leave and decrement used_leave
+
+                          await FirebaseFirestore.instance
+                              .collection('employee')
+                              .doc(employeeId)
+                              .collection('leave')
+                              .doc(leaveId)
+                              .update({'hrd_approval': 'Disetujui'});
+
+                          Get.back();
+                          CustomToast.successToast(
+                              'Berhasil', 'Pembatalan cuti berhasil disetujui');
+                        } else {
+                          await FirebaseFirestore.instance
+                              .collection('employee')
+                              .doc(employeeId)
+                              .collection('leave')
+                              .doc(leaveId)
+                              .update({'hrd_approval': 'Disetujui'});
+
+                          Get.back();
+                          CustomToast.successToast(
+                              'Berhasil', 'Pengajuan cuti berhasil disetujui');
+                        }
                       }
 
                       // Fetch the leaveDoc again to get the updated manager_approval and hrd_approval fields
@@ -134,14 +172,26 @@ class ListRequestLeaveController extends GetxController {
 
                       if (updatedData != null &&
                           updatedData['manager_approval'] == 'Disetujui' &&
-                          updatedData['hrd_approval'] == 'Disetujui') {
+                          updatedData['hrd_approval'] == 'Disetujui' &&
+                          updatedData['cancel_status'] == 'Belum Dibatalkan') {
                         // If approved, update total_leave and used_leave
                         await FirebaseFirestore.instance
                             .collection('employee')
                             .doc(employeeId)
                             .update({
-                          'total_leave': totalLeave,
-                          'used_leave': usedLeave
+                          'total_leave': newTotalLeave,
+                          'used_leave': newUsedLeave
+                        });
+                      } else if (updatedData != null &&
+                          updatedData['manager_approval'] == 'Disetujui' &&
+                          updatedData['hrd_approval'] == 'Disetujui' &&
+                          updatedData['cancel_status'] == 'Dibatalkan') {
+                        await FirebaseFirestore.instance
+                            .collection('employee')
+                            .doc(employeeId)
+                            .update({
+                          'total_leave': cancelTotalLeave,
+                          'used_leave': cancelUsedLeave,
                         });
                       }
                     } else {
@@ -163,6 +213,10 @@ class ListRequestLeaveController extends GetxController {
                   CustomToast.errorToast('Gagal', 'Data tidak ditemukan');
                 } else {
                   rethrow;
+                }
+              } finally {
+                if (Get.isDialogOpen!) {
+                  Get.back();
                 }
               }
             },
@@ -237,6 +291,10 @@ class ListRequestLeaveController extends GetxController {
                   CustomToast.errorToast('Gagal', 'Data tidak ditemukan');
                 } else {
                   rethrow;
+                }
+              } finally {
+                if (Get.isDialogOpen!) {
+                  Get.back();
                 }
               }
             },

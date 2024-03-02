@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:hetian_mobile/app/controllers/page_index_controller.dart';
-import 'package:hetian_mobile/app/services/firebase_api.dart';
+import 'package:hetian_mobile/app/modules/navigation_bar/controllers/navigation_bar_controller.dart';
 import 'package:hetian_mobile/color_schemes.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'firebase_options.dart';
@@ -15,9 +14,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseApi().initNotifications();
-
-  Get.put(PageIndexController(), permanent: true);
 
   runApp(
     StreamBuilder<User?>(
@@ -33,11 +29,13 @@ void main() async {
           );
         }
         return GetMaterialApp(
+          initialBinding: BindingsBuilder(() {
+            Get.put(NavigationBarController());
+          }),
           title: "Application",
           debugShowCheckedModeBanner: false,
-          initialRoute: snapshot.data != null
-              ? Routes.CUSTOM_SALOMON_NAVBAR
-              : Routes.LOGIN,
+          initialRoute:
+              snapshot.data != null ? Routes.NAVIGATION_BAR : Routes.LOGIN,
           getPages: AppPages.routes,
           theme: ThemeData(
             useMaterial3: true,

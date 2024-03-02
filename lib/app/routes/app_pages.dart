@@ -6,8 +6,6 @@ import '../modules/annual_leave/bindings/annual_leave_binding.dart';
 import '../modules/annual_leave/views/annual_leave_view.dart';
 import '../modules/change_password/bindings/change_password_binding.dart';
 import '../modules/change_password/views/change_password_view.dart';
-import '../modules/custom_salomon_navbar/bindings/custom_salomon_navbar_binding.dart';
-import '../modules/custom_salomon_navbar/views/custom_salomon_navbar_view.dart';
 import '../modules/detail_leave/bindings/detail_leave_binding.dart';
 import '../modules/detail_leave/views/detail_leave_view.dart';
 import '../modules/employee/bindings/employee_binding.dart';
@@ -22,6 +20,8 @@ import '../modules/list_request_leave/bindings/list_request_leave_binding.dart';
 import '../modules/list_request_leave/views/list_request_leave_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/navigation_bar/bindings/navigation_bar_binding.dart';
+import '../modules/navigation_bar/views/navigation_bar_view.dart';
 import '../modules/new_password/bindings/new_password_binding.dart';
 import '../modules/new_password/views/new_password_view.dart';
 import '../modules/notifications/bindings/notifications_binding.dart';
@@ -92,11 +92,6 @@ class AppPages {
       binding: AnnualLeaveBinding(),
     ),
     GetPage(
-      name: _Paths.CUSTOM_SALOMON_NAVBAR,
-      page: () => CustomSalomonNavbarView(),
-      binding: CustomSalomonNavbarBinding(),
-    ),
-    GetPage(
       name: _Paths.DETAIL_LEAVE,
       page: () => DetailLeaveView(),
       binding: DetailLeaveBinding(),
@@ -115,6 +110,11 @@ class AppPages {
       name: _Paths.LIST_REQUEST_LEAVE,
       page: () => const ListRequestLeaveView(),
       binding: ListRequestLeaveBinding(),
+    ),
+    GetPage(
+      name: _Paths.NAVIGATION_BAR,
+      page: () => const NavigationBarView(),
+      binding: NavigationBarBinding(),
     ),
   ];
 }

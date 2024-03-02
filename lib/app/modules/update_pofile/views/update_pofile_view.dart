@@ -121,7 +121,7 @@ class UpdatePofileView extends GetView<UpdatePofileController> {
           //section 2 - user data
           CustomInput(
             controller: controller.employeeidC,
-            label: "ID Pegawai",
+            label: "ID Karyawan",
             hint: "12345678",
             disabled: true,
             margin: const EdgeInsets.only(bottom: 16, top: 42),

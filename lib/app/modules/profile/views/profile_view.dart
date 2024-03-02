@@ -137,7 +137,7 @@ class ProfileView extends GetView<ProfileController> {
                                 ),
                                 (userData["role"] == "HRD")
                                     ? MenuTile(
-                                        title: 'Tambah Pegawai',
+                                        title: 'Tambah Karyawan Baru',
                                         icon: ColorFiltered(
                                           colorFilter: ColorFilter.mode(
                                             lightColorScheme.primary,
@@ -153,7 +153,7 @@ class ProfileView extends GetView<ProfileController> {
                                     : const SizedBox(),
                                 (userData["role"] == "HRD")
                                     ? MenuTile(
-                                        title: 'Riwayat Cuti Pegawai',
+                                        title: 'Riwayat Cuti Karyawan',
                                         icon: Center(
                                           child: FaIcon(
                                             FontAwesomeIcons.personCircleCheck,
@@ -171,7 +171,7 @@ class ProfileView extends GetView<ProfileController> {
                                 (userData["role"] == "HRD" ||
                                         userData["role"] == "Manager")
                                     ? MenuTile(
-                                        title: 'Daftar Pengajuan Cuti',
+                                        title: 'Pengajuan & Pembatalan Cuti',
                                         icon: Center(
                                           child: FaIcon(
                                             FontAwesomeIcons.listCheck,

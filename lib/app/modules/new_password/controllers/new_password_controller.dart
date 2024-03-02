@@ -1,13 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:hetian_mobile/app/controllers/page_index_controller.dart';
 import 'package:hetian_mobile/app/routes/app_pages.dart';
 import 'package:hetian_mobile/app/widgets/toast/custom_toast.dart';
 import 'package:hetian_mobile/company_data.dart';
 
 class NewPasswordController extends GetxController {
-  final pageIndexController = Get.find<PageIndexController>();
   RxBool isLoading = false.obs;
   RxBool newPassObs = true.obs;
   RxBool newPassCObs = true.obs;
@@ -44,7 +42,7 @@ class NewPasswordController extends GetxController {
       // relogin
       await auth.signOut();
       await auth.signInWithEmailAndPassword(email: email, password: passC.text);
-      Get.offAllNamed(Routes.CUSTOM_SALOMON_NAVBAR);
+      Get.offAllNamed(Routes.NAVIGATION_BAR);
 
       // pageIndexController.changePage(0);
       CustomToast.successToast('Sukses', 'Kata sandi berhasil diubah');

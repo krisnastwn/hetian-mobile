@@ -28,121 +28,7 @@ class DetailLeaveController extends GetxController {
         .format((data["end_date"] as Timestamp).toDate());
     reasonC.text = data["reason"] ?? "-";
 
-    // Convert DateTime back to Timestamp
-    data["start_date"] = Timestamp.fromDate(DateTime.parse(startDateC.text));
-    data["end_date"] = Timestamp.fromDate(DateTime.parse(endDateC.text));
-
     leaveData.assignAll(data);
-  }
-
-  Future<void> deleteLeave(String id) async {
-    Get.dialog(
-      AlertDialog(
-        buttonPadding: EdgeInsets.zero,
-        actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        title: const Text('Konfirmasi'),
-        content: const Text('Apakah anda yakin ingin menghapus cuti ini?'),
-        actions: [
-          TextButton(
-            child: const Text('Batal'),
-            onPressed: () {
-              Get.back();
-            },
-          ),
-          TextButton(
-            child:
-                const Text('Hapus', style: TextStyle(color: Color(0xffdf1b1b))),
-            onPressed: () async {
-              Get.back();
-              try {
-                // Show the loading indicator
-                Get.dialog(
-                  Center(
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          color: Color.fromRGBO(0, 103, 124, 1),
-                        ),
-                      ),
-                    ),
-                  ), // Show the loading indicator
-                  barrierDismissible:
-                      false, // Prevent the dialog from closing when the user taps outside it
-                );
-
-                DocumentReference docRef = firestore
-                    .collection("employee")
-                    .doc(auth.currentUser!.uid)
-                    .collection("leave")
-                    .doc(id);
-                DocumentSnapshot docSnapshot = await docRef.get();
-
-                if (docSnapshot.exists &&
-                    (docSnapshot.data()
-                            as Map<String, dynamic>)['hrd_approval'] ==
-                        'Disetujui') {
-                  // Calculate the duration of the requested leave
-                  DateTime startDate =
-                      (docSnapshot.get('start_date') as Timestamp).toDate();
-                  DateTime endDate =
-                      (docSnapshot.get('end_date') as Timestamp).toDate();
-                  int requestedLeaveDuration =
-                      endDate.difference(startDate).inDays + 1;
-                  await docRef.delete();
-
-                  Get.back(); // Close the loading indicator
-
-                  CustomToast.successToast(
-                      'Berhasil', 'Berhasil menghapus cuti');
-                  await Future.delayed(const Duration(seconds: 2));
-
-                  // Update total_leave
-                  DocumentReference employeeRef = firestore
-                      .collection("employee")
-                      .doc(auth.currentUser!.uid);
-                  await employeeRef.update({
-                    'total_leave': FieldValue.increment(
-                        requestedLeaveDuration), // increment total_leave by the number of days in the leave request
-                    'used_leave': FieldValue.increment(
-                        -requestedLeaveDuration) // decrement used_leave by the number of days in the leave request
-                  });
-
-                  Get.back(closeOverlays: true);
-                } else if (docSnapshot.exists &&
-                        (docSnapshot.data()
-                                as Map<String, dynamic>)['hrd_approval'] ==
-                            'Belum Disetujui' ||
-                    (docSnapshot.data()
-                            as Map<String, dynamic>)['hrd_approval'] ==
-                        'Tidak Disetujui') {
-                  await docRef.delete();
-
-                  Get.back(); // Close the loading indicator
-
-                  CustomToast.successToast(
-                      'Berhasil', 'Berhasil menghapus cuti');
-                  await Future.delayed(const Duration(seconds: 2));
-                  Get.back(closeOverlays: true);
-                } else {
-                  Get.back(); // Close the loading indicator
-                  CustomToast.errorToast('Gagal', 'Gagal menghapus cuti');
-                }
-              } catch (e) {
-                Get.back(); // Close the loading indicator
-                CustomToast.errorToast(
-                    'Gagal', 'Terjadi kesalahan saat menghapus cuti');
-              }
-            },
-          ),
-        ],
-      ),
-    );
   }
 
   void toggleEdit() {
@@ -368,5 +254,89 @@ class DetailLeaveController extends GetxController {
       isEditing.value = false;
       rethrow;
     }
+  }
+
+  Future<void> cancelLeaveRequest(String id) async {
+    Get.dialog(
+      AlertDialog(
+        buttonPadding: EdgeInsets.zero,
+        actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        title: const Text('Konfirmasi'),
+        content: const Text('Apakah anda yakin ingin membatalkan cuti ini?'),
+        actions: [
+          TextButton(
+            child: const Text('Kembali'),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          TextButton(
+            child: const Text('Batalkan',
+                style: TextStyle(color: Color(0xffdf1b1b))),
+            onPressed: () async {
+              Get.back();
+              try {
+                // Show the loading indicator
+                Get.dialog(
+                  Center(
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: Color.fromRGBO(0, 103, 124, 1),
+                        ),
+                      ),
+                    ),
+                  ), // Show the loading indicator
+                  barrierDismissible:
+                      false, // Prevent the dialog from closing when the user taps outside it
+                );
+
+                DocumentReference leaveRef = firestore
+                    .collection("employee")
+                    .doc(auth.currentUser!.uid)
+                    .collection("leave")
+                    .doc(id);
+                DocumentSnapshot docSnapshot = await leaveRef.get();
+                var leaveData = docSnapshot.data() as Map<String, dynamic>;
+                if (docSnapshot.exists &&
+                    leaveData['cancel_status'] == 'Belum Dibatalkan' &&
+                    leaveData['manager_approval'] == 'Disetujui' &&
+                    leaveData['hrd_approval'] == 'Disetujui') {
+                  await leaveRef.update({
+                    'cancel_status': 'Dibatalkan',
+                    'manager_approval': 'Belum Disetujui',
+                    'hrd_approval': 'Belum Disetujui',
+                    'date_request': Timestamp.fromDate(DateTime.now()),
+                  });
+
+                  Get.back(); // Close the loading indicator
+                  CustomToast.successToast('Berhasil',
+                      'Berhasil mengirim pengajuan pembatalan cuti');
+                  await Future.delayed(const Duration(seconds: 2));
+                  Get.back(closeOverlays: true); //back to homepage
+                } else {
+                  await leaveRef.delete();
+                  Get.back(); // Close the loading indicator
+                  CustomToast.successToast(
+                      'Berhasil', 'Berhasil membatalkan pengajuan cuti');
+                  await Future.delayed(const Duration(seconds: 2));
+                  Get.back(closeOverlays: true); //back to homepage
+                }
+              } catch (e) {
+                Get.back(); // Close the loading indicator
+                CustomToast.errorToast(
+                    'Gagal', 'Terjadi kesalahan saat membatalkan cuti');
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

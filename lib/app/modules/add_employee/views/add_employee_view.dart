@@ -15,7 +15,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Tambah Pegawai',
+          'Tambah Karyawan',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -49,7 +49,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
         children: [
           CustomInput(
             controller: controller.idC,
-            label: 'ID Pegawai',
+            label: 'ID Karyawan',
             hint: '12345678',
             textInputAction: TextInputAction.next,
             focusNode: controller.idFocusNode,
@@ -61,7 +61,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
           CustomInput(
             controller: controller.nameC,
             label: 'Nama Lengkap',
-            hint: 'Joko Susilo',
+            hint: 'Rika Ratnasari',
             textInputAction: TextInputAction.next,
             focusNode: controller.nameFocusNode,
             onSubmitted: (value) {
@@ -72,7 +72,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
           CustomInput(
             controller: controller.emailC,
             label: 'Email',
-            hint: 'jokosusilo@hetian.com',
+            hint: 'rikaratnasari@hetian.com',
             textInputAction: TextInputAction.next,
             focusNode: controller.emailFocusNode,
           ),

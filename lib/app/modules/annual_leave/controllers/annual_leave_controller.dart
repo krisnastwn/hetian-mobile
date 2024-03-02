@@ -202,6 +202,7 @@ class AnnualLeaveController extends GetxController {
                   'end_date': endTimestamp,
                   'manager_approval': 'Belum Disetujui',
                   'hrd_approval': 'Belum Disetujui',
+                  'cancel_status': 'Belum Dibatalkan',
                 };
 
                 await FirebaseFirestore.instance

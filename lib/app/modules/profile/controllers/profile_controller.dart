@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hetian_mobile/app/modules/navigation_bar/controllers/navigation_bar_controller.dart';
 import 'package:hetian_mobile/app/routes/app_pages.dart';
 
 class ProfileController extends GetxController {
@@ -53,6 +54,14 @@ class ProfileController extends GetxController {
               );
               await auth.signOut();
               Get.back(); // Close the dialog
+              // Get the NavigationBarController
+              NavigationBarController navController =
+                  Get.find<NavigationBarController>();
+
+              // Reset the selected index to 0
+              navController.selectedIndex.value = 0;
+
+              // Navigate to the login screen
               Get.offAllNamed(Routes.LOGIN);
             },
           ),

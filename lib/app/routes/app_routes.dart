@@ -14,11 +14,11 @@ abstract class Routes {
   static const CHANGE_PASSWORD = _Paths.CHANGE_PASSWORD;
   static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
   static const ANNUAL_LEAVE = _Paths.ANNUAL_LEAVE;
-  static const CUSTOM_SALOMON_NAVBAR = _Paths.CUSTOM_SALOMON_NAVBAR;
   static const DETAIL_LEAVE = _Paths.DETAIL_LEAVE;
   static const EMPLOYEE = _Paths.EMPLOYEE;
   static const LEAVE = _Paths.LEAVE;
   static const LIST_REQUEST_LEAVE = _Paths.LIST_REQUEST_LEAVE;
+  static const NAVIGATION_BAR = _Paths.NAVIGATION_BAR;
 }
 
 abstract class _Paths {
@@ -32,9 +32,9 @@ abstract class _Paths {
   static const CHANGE_PASSWORD = '/change-password';
   static const NOTIFICATIONS = '/notifications';
   static const ANNUAL_LEAVE = '/annual-leave';
-  static const CUSTOM_SALOMON_NAVBAR = '/custom-salomon-navbar';
   static const DETAIL_LEAVE = '/detail-leave';
   static const EMPLOYEE = '/employee';
   static const LEAVE = '/leave';
   static const LIST_REQUEST_LEAVE = '/list-request-leave';
+  static const NAVIGATION_BAR = '/navigation-bar';
 }
